@@ -1,3 +1,4 @@
-<div>
+<div [ngClass]="{ greenborder: available }" (click)="cellClicked()">
 	<app-piece [piece]=cell.pieceOnCell></app-piece>	
 </div>
+

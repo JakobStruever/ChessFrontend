@@ -3,3 +3,10 @@ div{
 	height: 12vh;
 	margin: 1px;
 }
+
+.greenborder{
+  border-style: solid;
+  border-width: 2px;
+  border-color: green;
+  box-sizing: border-box;
+}
