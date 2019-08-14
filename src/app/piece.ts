@@ -17,4 +17,5 @@ export enum Player{
 export class Piece{
 	type: PieceType;
 	owner: Player;
+	jiggle: boolean;
 }

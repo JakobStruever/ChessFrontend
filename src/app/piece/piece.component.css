@@ -4,3 +4,26 @@ img{
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
+
+.jiggle {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-49%,-50%,0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(-52%,-50%,0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-48%,-50%,0);
+  }
+
+  40%, 60% {
+    transform: translate3d(-54%,-50%,0);
+  }
+}
+

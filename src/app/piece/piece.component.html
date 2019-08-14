@@ -1,1 +1,1 @@
-<img *ngIf="shouldRender" src="{{imagePath}}">
+<img [@jiggle]="jiggle ? 'normal2' : 'normal'"  (@jiggle.done)="jiggle = false" *ngIf="shouldRender" src="{{imagePath}}">

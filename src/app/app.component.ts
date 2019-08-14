@@ -16,29 +16,44 @@ export class AppComponent {
   
 	constructor(private apiService: APIService){ }
 	
-	//TODO: This needs reworking
 	async onClicked(emitter: Cell){
-		if(this.pieceClicked && emitter.available){
-			this.board[emitter.positionY][emitter.positionX].pieceOnCell = {type: this.lastCellClicked.pieceOnCell.type, owner: this.lastCellClicked.pieceOnCell.owner};
-			this.board[this.lastCellClicked.positionY][this.lastCellClicked.positionX].pieceOnCell = {owner: Player.None, type: PieceType.NoPiece};
+		if(emitter.pieceOnCell.owner === Player.Human){
+			var val = await this.apiService.getPossibleMoves(this.apiService.translatePosIntoString(emitter.positionX, emitter.positionY));
+			this.stopDisplayingAvailableMoves();
+			if(val.moves.length > 0){
+				this.displayAvailableMoves(val.moves);
+				this.lastCellClicked = emitter;
+				this.pieceClicked = true;
+			}else{
+				this.board[emitter.positionY][emitter.positionX].pieceOnCell = {type: emitter.pieceOnCell.type, owner: emitter.pieceOnCell.owner, jiggle: true};
+			}
+		}else if(this.pieceClicked){
+			if(emitter.available){
+				//move the piece
+				this.board[emitter.positionY][emitter.positionX].pieceOnCell = {type: this.lastCellClicked.pieceOnCell.type, owner: this.lastCellClicked.pieceOnCell.owner, jiggle: false};
+				this.board[this.lastCellClicked.positionY][this.lastCellClicked.positionX].pieceOnCell = {owner: Player.None, type: PieceType.NoPiece, jiggle: false};
+			}
+			this.stopDisplayingAvailableMoves();
 			this.pieceClicked = false;
-			for(var i=0; i<this.availableCells.length; i++){
-				var point = this.apiService.translateStringIntoPos(this.availableCells[i]);	
-				var oldCell = this.board[point.y][point.x];
-				this.board[point.y][point.x] = {positionX: oldCell.positionX, positionY: oldCell.positionY, pieceOnCell: oldCell.pieceOnCell, available: false};
-			}
-
-		}else if(!this.pieceClicked && emitter.pieceOnCell.owner === Player.Human){
-			var val = await this.apiService.getPossibleMoves(this.apiService.translatePosIntoString(emitter.positionX, emitter.positionY))
-			this.availableCells = val.moves;
-			for(var i=0; i<val.moves.length;i++){
-				var point = this.apiService.translateStringIntoPos(val.moves[i]);	
-				var oldCell = this.board[point.y][point.x];
-				this.board[point.y][point.x] = {positionX: oldCell.positionX, positionY: oldCell.positionY, pieceOnCell: oldCell.pieceOnCell, available: true};
-			}
-			this.lastCellClicked = emitter;
-			this.pieceClicked = true;
 		}
+	}
+	
+	displayAvailableMoves(list: Array<string>){
+		for(var i=0; i<list.length;i++){
+			var point = this.apiService.translateStringIntoPos(list[i]);	
+			var oldCell = this.board[point.y][point.x];
+			this.board[point.y][point.x] = {positionX: oldCell.positionX, positionY: oldCell.positionY, pieceOnCell: oldCell.pieceOnCell, available: true};
+		}
+		this.availableCells = list;
+	}
+	
+	stopDisplayingAvailableMoves(){
+		for(var i=0; i<this.availableCells.length; i++){
+			var point = this.apiService.translateStringIntoPos(this.availableCells[i]);	
+			var oldCell = this.board[point.y][point.x];
+			this.board[point.y][point.x] = {positionX: oldCell.positionX, positionY: oldCell.positionY, pieceOnCell: oldCell.pieceOnCell, available: false};
+		}
+		this.availableCells = [];
 	}
 	
 	ngOnInit() {
