@@ -1,4 +1,13 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="display:flex;" *ngFor="let row of board">
-	<app-cell *ngFor="let cell of row" [cell]="cell" (clicked)="onClicked($event)"></app-cell>
+<div style="display:flex; flex-direction:row;margin: 0; height: 100%; overflow-y: hidden">
+	<div>
+		<div style="display:flex; flex-direction: row" *ngFor="let row of board">
+			<app-cell *ngFor="let cell of row" [cell]="cell" (clicked)="onClicked($event)"></app-cell>
+		</div>
+	</div>
+	<div style="flex-grow:1; position: relative;">
+		<app-log style="position: absolute; height:100%; width: 100%" (readyToLogEvent)="readyLog()" [movement]=logMessage ></app-log>	
+	</div>
 </div>
+
+

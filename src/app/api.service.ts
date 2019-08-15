@@ -13,6 +13,17 @@ interface ListPossibleMovesResponse{
 	_id: string
 }
 
+interface MakeAIMoveResponse{
+	to: string,
+	from: string,
+	_id: string
+}
+
+interface CheckmateResponse{
+	status: string,
+	_id: string
+}
+
 interface Point{
 	x: number,
 	y: number
@@ -37,11 +48,32 @@ export class APIService {
 		this.http.get<GameStartResponse>("https://chess-api-chess.herokuapp.com/api/v1/chess/one").subscribe((val) => {this.gameID = val.game_id});
 	}
 	
-	async getPossibleMoves(position: string){
+	getPossibleMoves(position: string){
 		const params = new HttpParams()
 			.set('game_id', this.gameID)
 			.set('position', position);
 		return this.http.post<ListPossibleMovesResponse>("http://chess-api-chess.herokuapp.com/api/v1/chess/one/moves", params, httpOptions).toPromise();
+	}
+	
+	makeMove(from: string, to: string){
+		const params = new HttpParams()
+			.set('game_id', this.gameID)
+			.set('from', from)
+			.set('to', to);
+		return this.http.post("http://chess-api-chess.herokuapp.com/api/v1/chess/one/move/player", params, httpOptions).toPromise();
+	}
+	
+	makeAIMove(){
+		const params = new HttpParams()
+			.set('game_id', this.gameID);
+		return this.http.post<MakeAIMoveResponse>("http://chess-api-chess.herokuapp.com/api/v1/chess/one/move/ai", params, httpOptions).toPromise();
+	}
+	
+	checkmate(){
+		const params = new HttpParams()
+			.set('game_id', this.gameID);
+		return this.http.post<CheckmateResponse>("http://chess-api-chess.herokuapp.com/api/v1/chess/one/check", params, httpOptions).toPromise();
+
 	}
 	
 	//Translates from Array Indices to Chessboard notation (i.e. x:6 and y:7 becomes "g1")

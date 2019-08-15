@@ -1,0 +1,17 @@
+div{
+	overflow-y: scroll;
+	height:100%;
+	width:97%;
+	margin-left: 2%;
+	padding: 2% 3%;
+	box-sizing: border-box;
+	background-color:silver;
+	border-style: solid;
+	border-width: 1px;
+	text-align: left;
+	line-height: 1.5;	
+}
+
+span{
+	color: red; 
+}

@@ -13,7 +13,8 @@ export class AppComponent {
 	private pieceClicked: boolean = false;
 	private lastCellClicked: Cell;
 	private availableCells :Array<string> = new Array();
-  
+	private logMessage: string ="";
+	private turn: number = 1;
 	constructor(private apiService: APIService){ }
 	
 	async onClicked(emitter: Cell){
@@ -30,17 +31,25 @@ export class AppComponent {
 		}else if(this.pieceClicked){
 			if(emitter.available){
 				//move the piece
-				this.board[emitter.positionY][emitter.positionX].pieceOnCell = {type: this.lastCellClicked.pieceOnCell.type, owner: this.lastCellClicked.pieceOnCell.owner, jiggle: false};
-				this.board[this.lastCellClicked.positionY][this.lastCellClicked.positionX].pieceOnCell = {owner: Player.None, type: PieceType.NoPiece, jiggle: false};
+				await this.apiService.makeMove(this.apiService.translatePosIntoString(this.lastCellClicked.positionX, this.lastCellClicked.positionY), this.apiService.translatePosIntoString(emitter.positionX, emitter.positionY));
+				this.movePiece(this.apiService.translatePosIntoString(this.lastCellClicked.positionX, this.lastCellClicked.positionY), this.apiService.translatePosIntoString(emitter.positionX, emitter.positionY));
+				this.stopDisplayingAvailableMoves();
+
+				var move = await this.apiService.makeAIMove();
+				this.movePiece(move.from, move.to);
+			}else{
+				this.stopDisplayingAvailableMoves();
 			}
-			this.stopDisplayingAvailableMoves();
 			this.pieceClicked = false;
 		}
 	}
 	
 	displayAvailableMoves(list: Array<string>){
 		for(var i=0; i<list.length;i++){
-			var point = this.apiService.translateStringIntoPos(list[i]);	
+			var point = this.apiService.translateStringIntoPos(list[i]);
+			if(point.x > 7 || point.x <0 || point.y >7 || point.y<0){
+				continue;
+			}
 			var oldCell = this.board[point.y][point.x];
 			this.board[point.y][point.x] = {positionX: oldCell.positionX, positionY: oldCell.positionY, pieceOnCell: oldCell.pieceOnCell, available: true};
 		}
@@ -50,10 +59,39 @@ export class AppComponent {
 	stopDisplayingAvailableMoves(){
 		for(var i=0; i<this.availableCells.length; i++){
 			var point = this.apiService.translateStringIntoPos(this.availableCells[i]);	
+			if(point.x > 7 || point.x <0 || point.y >7 || point.y<0){
+				continue;
+			}
 			var oldCell = this.board[point.y][point.x];
 			this.board[point.y][point.x] = {positionX: oldCell.positionX, positionY: oldCell.positionY, pieceOnCell: oldCell.pieceOnCell, available: false};
 		}
 		this.availableCells = [];
+	}
+	
+	async movePiece(from: string, to: string){
+		var fromPoint = this.apiService.translateStringIntoPos(from);
+		var toPoint = this.apiService.translateStringIntoPos(to);
+		this.board[toPoint.y][toPoint.x].pieceOnCell = {type: this.board[fromPoint.y][fromPoint.x].pieceOnCell.type, owner: this.board[fromPoint.y][fromPoint.x].pieceOnCell.owner, jiggle: false};
+		this.board[fromPoint.y][fromPoint.x].pieceOnCell = {owner: Player.None, type: PieceType.NoPiece, jiggle: false};
+		var resp = await this.apiService.checkmate();
+		this.logMessage = this.composeLogMessage(from, to, resp.status === "check mate");
+		this.turn++;
+	}
+	
+	composeLogMessage(from: string, to: string, gameOver: boolean): string{
+		var message = "Turn "+ this.turn+": ";		
+		var currentPlayer = "";
+		if(this.turn%2 === 0){
+			currentPlayer = "Black";
+		}else{
+			currentPlayer = "White"
+		}
+		message += currentPlayer;
+		message += " moved from "+ from + " to " + to+ "<br>";
+		if(gameOver){
+			message += "Checkmate! "+ currentPlayer +" wins!"
+		}
+		return message;
 	}
 	
 	ngOnInit() {

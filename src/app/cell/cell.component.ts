@@ -13,13 +13,13 @@ export class CellComponent implements OnInit {
 	available: boolean;
 	constructor() {
 	}
+	
 	cellClicked(){
 		this.clicked.emit(this.cell);
 	}
+	
 	ngOnInit() {
 	}
-	
-	
 	
 	ngOnChanges(changes: SimpleChanges) {
 		this.available = changes.cell.currentValue.available;

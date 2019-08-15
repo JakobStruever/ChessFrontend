@@ -51,7 +51,6 @@ export class PieceComponent implements OnInit {
   constructor() { 
   }
 	ngOnChanges(changes: SimpleChanges) {
-		console.log(changes.piece.currentValue.jiggle);
 		if(changes.piece.currentValue.type !== PieceType.NoPiece){
 			if(changes.piece.currentValue.jiggle){
 				this.jiggle = false;
