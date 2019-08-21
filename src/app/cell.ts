@@ -8,6 +8,6 @@ export class Cell{
 	constructor(x: number, y: number) {
 		this.positionX = x;
 		this.positionY = y;
-		this.pieceOnCell= {type: PieceType.NoPiece, owner:Player.None, jiggle: false}
+		this.pieceOnCell= new Piece(PieceType.NoPiece, Player.None, false);
 	}
 }

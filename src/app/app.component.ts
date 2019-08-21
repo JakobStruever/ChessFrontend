@@ -12,6 +12,7 @@ export class AppComponent {
 	board: Array<Array<Cell>> = new Array();
 	whitePiecesLost: Array<Piece> = new Array();
 	blackPiecesLost: Array<Piece> = new Array();
+	gameOver: boolean = true;
 	private pieceClicked: boolean = false;
 	private lastCellClicked: Cell;
 	private availableCells :Array<string> = new Array();
@@ -44,6 +45,14 @@ export class AppComponent {
 			}
 			this.pieceClicked = false;
 		}
+	}
+	
+	startNewMatch(){
+		this.gameOver = false;
+		this.whitePiecesLost = [];
+		this.blackPiecesLost = [];
+		this.resetBoard();
+		this.apiService.startNewMatch();
 	}
 	
 	displayAvailableMoves(list: Array<string>){
@@ -107,7 +116,7 @@ export class AppComponent {
 	
 	ngOnInit() {
 		//Gets a game id from the Backend API
-		this.apiService.startNewMatch();
+		//this.apiService.startNewMatch();
 		//Establishes the board
 		for(var i = 0; i<64; i++){
 			if(i%8 === 0){
@@ -115,8 +124,34 @@ export class AppComponent {
 			}
 			this.board[Math.floor(i/8)].push(new Cell(i%8, Math.floor(i/8)));
 		}
+		this.fillSideBoards();
 		//Places all pieces on the board
-		this.resetBoard();
+		//this.resetBoard();
+	}
+	
+	fillSideBoards(){
+		for(var i = 0; i<8; i++){
+			this.whitePiecesLost.push(new Piece(PieceType.Pawn, Player.Human, false));
+			this.blackPiecesLost.push(new Piece(PieceType.Pawn, Player.AI, false));
+		}
+		for(var i = 0; i<2; i++){
+			this.whitePiecesLost.push(new Piece(PieceType.Knight, Player.Human, false));
+			this.blackPiecesLost.push(new Piece(PieceType.Knight, Player.AI, false));
+		}
+		for(var i = 0; i<2; i++){
+			this.whitePiecesLost.push(new Piece(PieceType.Bishop, Player.Human, false));
+			this.blackPiecesLost.push(new Piece(PieceType.Bishop, Player.AI, false));
+		}
+		for(var i = 0; i<2; i++){
+			this.whitePiecesLost.push(new Piece(PieceType.Rook, Player.Human, false));
+			this.blackPiecesLost.push(new Piece(PieceType.Rook, Player.AI, false));
+		}
+
+		this.whitePiecesLost.push(new Piece(PieceType.Queen, Player.Human, false));
+		this.blackPiecesLost.push(new Piece(PieceType.Queen, Player.AI, false));
+
+		this.whitePiecesLost.push(new Piece(PieceType.King, Player.Human, false));
+		this.blackPiecesLost.push(new Piece(PieceType.King, Player.AI, false));
 	}
 	
 	resetBoard(){
@@ -129,19 +164,19 @@ export class AppComponent {
 			for(var j = 0; j<8; j++){
 				//Place Pawns
 				if(i===1 || i===6){
-					this.board[i][j].pieceOnCell.type = PieceType.Pawn;		
+					this.board[i][j].pieceOnCell = new Piece(PieceType.Pawn, Player.None, false);
 				//Place Rest
 				}else if(i%7 === 0){
 					if(j%7 === 0){
-						this.board[i][j].pieceOnCell.type = PieceType.Rook;					
+						this.board[i][j].pieceOnCell = new Piece(PieceType.Rook, Player.None, false);
 					}else if(j === 1 || j === 6){
-						this.board[i][j].pieceOnCell.type = PieceType.Knight;					
+						this.board[i][j].pieceOnCell = new Piece(PieceType.Knight, Player.None, false);	
 					}else if(j === 2 || j === 5){
-						this.board[i][j].pieceOnCell.type = PieceType.Bishop;					
+						this.board[i][j].pieceOnCell = new Piece(PieceType.Bishop, Player.None, false);			
 					}else if(j === 3){
-						this.board[i][j].pieceOnCell.type = PieceType.Queen;					
+						this.board[i][j].pieceOnCell = new Piece(PieceType.Queen, Player.None, false);	
 					}else if(j === 4){
-						this.board[i][j].pieceOnCell.type = PieceType.King;					
+						this.board[i][j].pieceOnCell = new Piece(PieceType.King, Player.None, false);					
 					}
 				}
 			}

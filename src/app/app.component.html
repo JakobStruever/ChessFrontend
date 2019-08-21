@@ -1,6 +1,12 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="display:flex; flex-direction:row;margin: 0; height: 100%; overflow-y: hidden">
+<div style="display:flex; flex-direction:row; height: 100%; width: 100%; overflow-y: hidden">
 	<div>
+		<div [class.invisible]="!gameOver" style="position: absolute; height: 98vh; width: 98vh; background-color: black; opacity: 0.7; z-index: 3;">
+		</div>
+		<div [class.invisible]="!gameOver" style="position: absolute; left: 45vh; top:45vh; width: 10vw; height: 10vh; background-color:white; z-index:4; border-radius: 5px; text-align: center; vertical-align: text-bottom;">
+				<p>Start a new match?</p>
+				<button (click)="startNewMatch()">Yes, please!</button>
+		</div>
 		<div class="chess" style="display:flex; flex-direction: row" *ngFor="let row of board">
 			<app-cell *ngFor="let cell of row" [cell]="cell" (clicked)="onClicked($event)"></app-cell>
 		</div>

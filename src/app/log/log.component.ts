@@ -14,20 +14,18 @@ export class LogComponent implements OnInit {
 	@Input() blackPiecesLost: Array<Piece> = new Array();
 
 	
-	constructor() { }
+	constructor() {}
 
 	ngOnInit() {
 	}
-	show(){
-		console.log(this.whitePiecesLost);
-		console.log(this.blackPiecesLost);
-	}
 	async ngOnChanges(changes: SimpleChanges) {
-		if(changes.movement.currentValue === ""){
-			return;
+		if(changes.movement !== undefined){
+			if(changes.movement.currentValue === ""){
+				return;
+			}
+			this.loggerDiv.nativeElement.innerHTML += changes.movement.currentValue;
+			this.loggerDiv.nativeElement.scrollTop = this.loggerDiv.nativeElement.scrollHeight;
 		}
-		this.loggerDiv.nativeElement.innerHTML += changes.movement.currentValue;
-		this.loggerDiv.nativeElement.scrollTop = this.loggerDiv.nativeElement.scrollHeight;
 	}
 
 }
