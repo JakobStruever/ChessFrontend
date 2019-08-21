@@ -52,7 +52,7 @@ export class APIService {
 		const params = new HttpParams()
 			.set('game_id', this.gameID)
 			.set('position', position);
-		return this.http.post<ListPossibleMovesResponse>("http://chess-api-chess.herokuapp.com/api/v1/chess/one/moves", params, httpOptions).toPromise();
+		return this.http.post<ListPossibleMovesResponse>("https://chess-api-chess.herokuapp.com/api/v1/chess/one/moves", params, httpOptions).toPromise();
 	}
 	
 	makeMove(from: string, to: string){
@@ -60,19 +60,19 @@ export class APIService {
 			.set('game_id', this.gameID)
 			.set('from', from)
 			.set('to', to);
-		return this.http.post("http://chess-api-chess.herokuapp.com/api/v1/chess/one/move/player", params, httpOptions).toPromise();
+		return this.http.post("https://chess-api-chess.herokuapp.com/api/v1/chess/one/move/player", params, httpOptions).toPromise();
 	}
 	
 	makeAIMove(){
 		const params = new HttpParams()
 			.set('game_id', this.gameID);
-		return this.http.post<MakeAIMoveResponse>("http://chess-api-chess.herokuapp.com/api/v1/chess/one/move/ai", params, httpOptions).toPromise();
+		return this.http.post<MakeAIMoveResponse>("https://chess-api-chess.herokuapp.com/api/v1/chess/one/move/ai", params, httpOptions).toPromise();
 	}
 	
 	checkmate(){
 		const params = new HttpParams()
 			.set('game_id', this.gameID);
-		return this.http.post<CheckmateResponse>("http://chess-api-chess.herokuapp.com/api/v1/chess/one/check", params, httpOptions).toPromise();
+		return this.http.post<CheckmateResponse>("https://chess-api-chess.herokuapp.com/api/v1/chess/one/check", params, httpOptions).toPromise();
 
 	}
 	

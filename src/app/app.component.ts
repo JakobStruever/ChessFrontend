@@ -10,10 +10,12 @@ import { APIService } from './api.service'
 })
 export class AppComponent {
 	board: Array<Array<Cell>> = new Array();
+	whitePiecesLost: Array<Piece> = new Array();
+	blackPiecesLost: Array<Piece> = new Array();
 	private pieceClicked: boolean = false;
 	private lastCellClicked: Cell;
 	private availableCells :Array<string> = new Array();
-	private logMessage: string ="";
+	logMessage: string ="";
 	private turn: number = 1;
 	constructor(private apiService: APIService){ }
 	
@@ -71,6 +73,15 @@ export class AppComponent {
 	async movePiece(from: string, to: string){
 		var fromPoint = this.apiService.translateStringIntoPos(from);
 		var toPoint = this.apiService.translateStringIntoPos(to);
+		//Check if a piece was beaten, if so, let the logger know
+		if(this.board[toPoint.y][toPoint.x].pieceOnCell.owner != Player.None){
+			var lostPiece = new Piece(this.board[toPoint.y][toPoint.x].pieceOnCell.type, this.board[toPoint.y][toPoint.x].pieceOnCell.owner, false)
+			if(lostPiece.owner == Player.Human){
+				this.whitePiecesLost.push(lostPiece);
+			}else if(lostPiece.owner == Player.AI){
+				this.blackPiecesLost.push(lostPiece);				
+			}
+		}
 		this.board[toPoint.y][toPoint.x].pieceOnCell = {type: this.board[fromPoint.y][fromPoint.x].pieceOnCell.type, owner: this.board[fromPoint.y][fromPoint.x].pieceOnCell.owner, jiggle: false};
 		this.board[fromPoint.y][fromPoint.x].pieceOnCell = {owner: Player.None, type: PieceType.NoPiece, jiggle: false};
 		var resp = await this.apiService.checkmate();

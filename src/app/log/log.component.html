@@ -1,1 +1,14 @@
-<div [innerHTML]="logContent" #logger></div>
+<div class="container" (click)="show()">
+	<div style="position: relative; min-height: 15%;">
+		<div class="blackborder" style="flex-wrap: wrap; position: absolute; display:flex; justify-content: flex-start; left:0; width: 49%; height: 100%;">
+			<app-piece *ngFor="let piece of whitePiecesLost" [piece]="piece">
+			</app-piece>
+		</div>
+		<div class="blackborder" style="flex-wrap: wrap; position: absolute; display:flex; justify-content: flex-start; left: 49%; width: 49%; height: 100%;">
+			<app-piece *ngFor="let piece of blackPiecesLost" [piece]="piece">
+			</app-piece>
+		</div>
+	</div>
+	<div class="logger blackborder" #logger>
+	</div>
+</div>

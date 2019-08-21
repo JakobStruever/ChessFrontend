@@ -1,14 +1,13 @@
-div:nth-child(odd) app-cell:nth-child(odd){
+.chess:nth-child(odd) app-cell:nth-child(odd){
 	background-color:#efefef
 }
-div:nth-child(odd) app-cell:nth-child(even){
+.chess:nth-child(odd) app-cell:nth-child(even){
 	background-color:#333333;
 }
-div:nth-child(even) app-cell:nth-child(even){
+.chess:nth-child(even) app-cell:nth-child(even){
 	background-color:#efefef;
 }
-div:nth-child(even) app-cell:nth-child(odd){
+.chess:nth-child(even) app-cell:nth-child(odd){
 	background-color:#333333;
 }
-
 

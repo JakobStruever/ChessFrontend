@@ -1,8 +1,16 @@
-div{
-	overflow-y: scroll;
+.container{
 	height:100%;
-	width:97%;
-	margin-left: 2%;
+	width:100%;
+	position: absolute;
+	padding-left: 2%;
+	box-sizing: border-box;
+
+}
+
+.logger{
+	overflow-y: scroll;
+	height:85%;
+	width:98%;
 	padding: 2% 3%;
 	box-sizing: border-box;
 	background-color:silver;
@@ -12,6 +20,10 @@ div{
 	line-height: 1.5;	
 }
 
-span{
-	color: red; 
+.blackborder{
+	box-sizing: border-box;
+	background-color:silver;
+	border-style: solid;
+	border-width: 1px;
 }
+
